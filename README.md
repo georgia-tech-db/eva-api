@@ -33,6 +33,7 @@ Currently supported APIs:
 - fetch_all / fetch_all_async
 
 Usage: check [db_api_example.py](dp_api_example.py)
+
 **Notice: Both asyncio and sync APIs have been provided. However sync APIs are auto-generated from asyncio APIs,
 so avoiding using sync APIs in an environment that contains asyncio.**
 
