@@ -54,8 +54,8 @@ def create_query(req):
 	if req['where']:
 		query = query + " WHERE "
 		for s in req['where']:
-			query = query + s['text'] + ", "
-		query = query[:len(query) - 2]
+			query = query + s['text'] + " OR "
+		query = query[:len(query) - 4]
 	query = query + ";"
 	
 	return query
