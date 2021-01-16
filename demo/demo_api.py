@@ -6,8 +6,8 @@ import pathlib
 from flask import Flask, request, make_response, send_file, jsonify
 from flask_restful import Resource, Api
 from src.db_api import connect_async
-from create_video import create_video_from_frames
-from config import FLASK_HOST, FLASK_PORT, API_DIR
+from utils import create_video_from_frames, delete_old_video_files
+from config import FLASK_HOST, FLASK_PORT, DATASET_DIR
 
 
 app = Flask(__name__)
@@ -17,7 +17,7 @@ input = []
 
 class SendVideo(Resource):
     def get(self, video_name):
-        name = (API_DIR / video_name).with_suffix('.mp4')
+        name = (DATASET_DIR / video_name).with_suffix('.mp4')
         return send_file(str(name))
 
 
@@ -26,6 +26,9 @@ class RequestFrames(Resource):
     request_id = 0
     
     def post(self):
+        # TODO: Perform delete operation in a background thread
+        delete_old_video_files()
+        
         RequestFrames.request_id = RequestFrames.request_id + 1
         params = request.get_json()
         query = create_query(params)
