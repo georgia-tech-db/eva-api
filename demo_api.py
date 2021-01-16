@@ -15,7 +15,7 @@ input = []
 class SendVideo(Resource):
     def get(self, video_name):
         print(video_name)
-        return send_file('/home/vivian/eva-api/data/'+video_name+'.mp4')
+        return send_file('data/'+video_name+'.mp4')
 
 
 class RequestFrames(Resource):

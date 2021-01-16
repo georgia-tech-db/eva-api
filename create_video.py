@@ -27,9 +27,14 @@ def create_video_from_frames(batch, name):
     print(duration)
     edit_video(video_name, duration)
 
+    #delete video from root 
+    os.remove(video_name)
+
 def edit_video(name, duration):
     video = VideoFileClip(name).set_duration(duration)
-    video.write_videofile("/home/vivian/eva-api/data/"+name, fps = 30)
+    if not os.path.exists('data'):
+        os.makedirs('data')
+    video.write_videofile("data/"+name, fps = 30)
     video.close()
 
 	
