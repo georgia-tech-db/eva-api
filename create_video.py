@@ -5,7 +5,9 @@ from src.response import Response
 from src.batch import Batch
 from moviepy.editor import *
 
-def create_video_from_frames(batch, video_name):
+def create_video_from_frames(batch, name):
+
+    video_name = name + '.mp4'
     
     first_frame = np.array(batch.frames['data'][0])
     height, width, layers = first_frame.shape
@@ -25,11 +27,9 @@ def create_video_from_frames(batch, video_name):
     print(duration)
     edit_video(video_name, duration)
 
-    return video_name
-
 def edit_video(name, duration):
     video = VideoFileClip(name).set_duration(duration)
-    video.write_videofile("/home/vivian/eva-ui/public/videos/"+name, fps = 30)
+    video.write_videofile("/home/vivian/eva-api/data/"+name, fps = 30)
     video.close()
 
 	
