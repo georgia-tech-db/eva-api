@@ -12,6 +12,11 @@ api = Api(app)
 
 input = []
 
+class SendVideo(Resource):
+    def get(self, video_name):
+        print(video_name)
+        return send_file('data/'+video_name+'.mp4')
+
 
 class RequestFrames(Resource):
 
@@ -62,11 +67,12 @@ def create_query(req):
 
 def generate_video_name(query: str, num: int):
     n = random.randrange(0,100000,1)
-    name = "result" + str(num) + "_" + str(n) + ".mp4"
+    name = "result" + str(num) + "_" + str(n)
     return name
 
 	  
 api.add_resource(RequestFrames, '/api/queryeva')
+api.add_resource(SendVideo, '/api/send_video/<string:video_name>')
 
 if __name__ == '__main__':
     app.run(debug=True)
