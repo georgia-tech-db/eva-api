@@ -3,10 +3,12 @@ import os
 import numpy as np
 from src.response import Response
 from src.batch import Batch
-import pathlib
 from moviepy.editor import *
+import pathlib
 
-def create_video_from_frames(batch, video_name):
+def create_video_from_frames(batch, name):
+
+    video_name = name + '.mp4'
     
     first_frame = np.array(batch.frames['data'][0])
     height, width, layers = first_frame.shape
@@ -25,8 +27,6 @@ def create_video_from_frames(batch, video_name):
     duration = len(batch.frames['data'])
     print(duration)
     edit_video(video_name, duration)
-
-    return video_name
 
 def edit_video(name, duration):
     video = VideoFileClip(name).set_duration(duration)
