@@ -5,6 +5,7 @@ from src.response import Response
 from src.batch import Batch
 from moviepy.editor import *
 import pathlib
+from config import API_DIR
 
 def create_video_from_frames(batch, name):
 
@@ -30,7 +31,7 @@ def create_video_from_frames(batch, name):
 
 def edit_video(name, duration):
     video = VideoFileClip(name).set_duration(duration)
-    filename = str(pathlib.Path().absolute() / name )
+    filename = str(API_DIR / name )
     video.write_videofile(filename, fps = 30)
     video.close()
 
