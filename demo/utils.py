@@ -45,5 +45,6 @@ def delete_old_video_files():
                 if os.path.isfile(f):
                     os.remove(f)
     except:
-        pass
+        if not os.path.exists(DATASET_DIR):
+            os.makedirs(DATASET_DIR)
 	
