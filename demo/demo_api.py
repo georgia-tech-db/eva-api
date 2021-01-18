@@ -7,7 +7,7 @@ from flask import Flask, request, make_response, send_file, jsonify
 from flask_restful import Resource, Api
 from src.db_api import connect_async
 from utils import create_video_from_frames, delete_old_video_files
-from config import FLASK_HOST, FLASK_PORT, DATASET_DIR
+from config import FLASK_HOST, FLASK_PORT, DATASET_DIR, EVA_HOST, EVA_PORT
 
 
 app = Flask(__name__)
@@ -42,8 +42,8 @@ class RequestFrames(Resource):
         return jsonify({"name": video_name})
 
 async def get_frames(query_list):
-    hostname = '0.0.0.0'
-    port = 5432
+    hostname = EVA_HOST
+    port = EVA_PORT
 	
     connection = await connect_async(hostname, port)
     cursor = connection.cursor()
