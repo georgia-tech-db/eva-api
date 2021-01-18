@@ -38,9 +38,12 @@ def edit_video(name, duration):
 
 def delete_old_video_files():
     now = time.time()
-    for f in os.listdir(DATASET_DIR):
-        f = os.path.join(DATASET_DIR, f)
-        if os.stat(f).st_mtime < now - 900:
-            if os.path.isfile(f):
-                os.remove(f)
+    try:
+        for f in os.listdir(DATASET_DIR):
+            f = os.path.join(DATASET_DIR, f)
+            if os.stat(f).st_mtime < now - 900:
+                if os.path.isfile(f):
+                    os.remove(f)
+    except:
+        pass
 	
