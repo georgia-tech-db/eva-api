@@ -1,0 +1,6 @@
+Flask==1.1.2
+Flask-RESTful==0.3.8
+moviepy==1.0.3
+numpy==1.19.5
+pandas
+opencv-contrib-python

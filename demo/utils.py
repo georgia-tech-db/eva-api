@@ -1,9 +1,11 @@
 import cv2
-import os
+import os, time, sys
 import numpy as np
 from src.response import Response
 from src.batch import Batch
 from moviepy.editor import *
+import pathlib
+from config import DATASET_DIR
 
 def create_video_from_frames(batch, name):
 
@@ -32,9 +34,20 @@ def create_video_from_frames(batch, name):
 
 def edit_video(name, duration):
     video = VideoFileClip(name).set_duration(duration)
-    if not os.path.exists('data'):
-        os.makedirs('data')
-    video.write_videofile("data/"+name, fps = 30)
+    filename = str(DATASET_DIR / name )
+    video.write_videofile(filename, fps = 30)
     video.close()
 
+
+def delete_old_video_files():
+    now = time.time()
+    try:
+        for f in os.listdir(DATASET_DIR):
+            f = os.path.join(DATASET_DIR, f)
+            if os.stat(f).st_mtime < now - 900:
+                if os.path.isfile(f):
+                    os.remove(f)
+    except:
+        if not os.path.exists(DATASET_DIR):
+            os.makedirs(DATASET_DIR)
 	

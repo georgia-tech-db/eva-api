@@ -2,10 +2,13 @@ import asyncio
 import json
 import os
 import random
+import pathlib
 from flask import Flask, request, make_response, send_file, jsonify
 from flask_restful import Resource, Api
 from src.db_api import connect_async
-from create_video import create_video_from_frames
+from utils import create_video_from_frames, delete_old_video_files
+from config import FLASK_HOST, FLASK_PORT, DATASET_DIR, EVA_HOST, EVA_PORT
+
 
 app = Flask(__name__)
 api = Api(app)
@@ -20,12 +23,14 @@ class SendName(Resource):
         name = generate_video_name(SendName.request_id)
         return jsonify({"name": name})
 
-
 class RequestFrames(Resource):
 
     request_id = 0
     
     def post(self):
+        # TODO: Perform delete operation in a background thread
+        delete_old_video_files()
+        
         RequestFrames.request_id = RequestFrames.request_id + 1
         params = request.get_json()
         query = create_query(params)
@@ -40,8 +45,8 @@ class RequestFrames(Resource):
         return send_file('data/'+video_name+'.mp4')
 
 async def get_frames(query_list):
-    hostname = '0.0.0.0'
-    port = 5432
+    hostname = EVA_HOST
+    port = EVA_PORT
 	
     connection = await connect_async(hostname, port)
     cursor = connection.cursor()
@@ -55,19 +60,17 @@ async def get_frames(query_list):
     
 
 def create_query(req):
-	query = "SELECT "
-	
-	for s in req['select']:
-		query = query + s['text'] + ", "
-	query = query[:len(query) - 2] + " FROM " + req['from']
-	if req['where']:
-		query = query + " WHERE "
-		for s in req['where']:
-			query = query + s['text'] + " OR "
-		query = query[:len(query) - 4]
-	query = query + ";"
-	
-	return query
+    query = "SELECT "
+    for s in req['select']:
+        query = query + s['text'] + ", "
+    query = query[:len(query) - 2] + " FROM " + req['from']
+    if req['where']:
+        query = query + " WHERE "
+        for s in req['where']:
+            query = query + s['text'] + " OR "
+        query = query[:len(query) - 4]
+    query = query + ";"
+    return query
 
 def generate_video_name(num: int):
     n = random.randrange(0,100000,1)
@@ -80,4 +83,5 @@ api.add_resource(RequestFrames, '/api/queryeva')
 api.add_resource(SendName, '/api/send_name')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+
+    app.run(host=FLASK_HOST, port=FLASK_PORT)
