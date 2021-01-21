@@ -15,11 +15,13 @@ api = Api(app)
 
 input = []
 
-class SendVideo(Resource):
-    def get(self, video_name):
-        name = (DATASET_DIR / video_name).with_suffix('.mp4')
-        return send_file(str(name))
+class SendName(Resource):
+    request_id = 0
 
+    def get(self):
+        SendName.request_id = SendName.request_id + 1
+        name = generate_video_name(SendName.request_id)
+        return jsonify({"name": name})
 
 class RequestFrames(Resource):
 
@@ -37,9 +39,10 @@ class RequestFrames(Resource):
         query_list = [query]
         frames = asyncio.run(get_frames(query_list))
         print("calling create video")
-        video_name = generate_video_name(params, RequestFrames.request_id)        
+        video_name = generate_video_name(RequestFrames.request_id)        
         create_video_from_frames(frames._batch, video_name)
-        return jsonify({"name": video_name})
+        #return jsonify({"name": video_name})
+        return send_file('data/'+video_name+'.mp4')
 
 async def get_frames(query_list):
     hostname = EVA_HOST
@@ -69,14 +72,15 @@ def create_query(req):
     query = query + ";"
     return query
 
-def generate_video_name(query: str, num: int):
+def generate_video_name(num: int):
     n = random.randrange(0,100000,1)
     name = "result" + str(num) + "_" + str(n)
     return name
 
 	  
 api.add_resource(RequestFrames, '/api/queryeva')
-api.add_resource(SendVideo, '/api/send_video/<string:video_name>')
+#api.add_resource(SendVideo, '/api/send_video/<string:video_name>')
+api.add_resource(SendName, '/api/send_name')
 
 if __name__ == '__main__':
 

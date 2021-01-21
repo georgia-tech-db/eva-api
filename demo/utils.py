@@ -29,6 +29,9 @@ def create_video_from_frames(batch, name):
     print(duration)
     edit_video(video_name, duration)
 
+    #delete video from root 
+    os.remove(video_name)
+
 def edit_video(name, duration):
     video = VideoFileClip(name).set_duration(duration)
     filename = str(DATASET_DIR / name )
