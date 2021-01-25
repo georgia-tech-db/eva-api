@@ -42,7 +42,9 @@ class RequestFrames(Resource):
         video_name = generate_video_name(RequestFrames.request_id)        
         create_video_from_frames(frames._batch, video_name)
         #return jsonify({"name": video_name})
-        return send_file('data/'+video_name+'.mp4')
+        name = video_name + ".mp4"
+        video_path = DATASET_DIR / name
+        return send_file(video_path)
 
 async def get_frames(query_list):
     hostname = EVA_HOST
