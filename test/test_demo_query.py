@@ -22,9 +22,12 @@ def create_dummy_batches(num_frames=10, start_id=0):
                          dtype=np.uint8)})
     return Batch(pd.DataFrame(data))
 
-async def mock_get_frames(query_list):
+async def mock_get_frames_with_content(query_list):
     batch = create_dummy_batches(5)
     return Response(200, batch)
+
+async def mock_get_frames_with_no_content(query_list):
+    return Response(200, None)
 
 class TestDemoQuery(unittest.TestCase):
     def setUp(self):
@@ -53,7 +56,7 @@ class TestDemoQuery(unittest.TestCase):
         query_statement = create_query(self.request_content)
         self.assertEqual(query_statement, "SELECT id, data FROM MyVideo WHERE id==1;")
 
-    @patch('demo.demo_api.get_frames', mock_get_frames)
+    @patch('demo.demo_api.get_frames', mock_get_frames_with_content)
     def test_api_queryeva(self):
         ret = self.client.post('/api/queryeva', json=self.request_content)
         #res = asyncio.run(request.get_frames(1))
@@ -63,7 +66,15 @@ class TestDemoQuery(unittest.TestCase):
         path_name += ".mp4"
         path_name = os.path.join("dataset", path_name)
         self.assertTrue(os.path.exists(path_name))
-        os.remove(path_name)
+        #os.remove(path_name)
 
+    @patch('demo.demo_api.get_frames', mock_get_frames_with_no_content)
+    def test_api_load_video(self):
+        with open("dataset/result.mp4", "wb+") as f:
+            f.write(b"Test")
+        ret = self.client.get('/api/load_file/result')
+        status = json.loads(ret.data)["status"]
+        self.assertEqual(status, 200)
+        os.remove("dataset/result.mp4")
         
 
