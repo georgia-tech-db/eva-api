@@ -1,7 +1,6 @@
 import asyncio
 import random
 
-from typing import List
 from src.async_protocol import EvaClient
 from src.response import Response
 
@@ -36,12 +35,14 @@ def run(query: List[str]):
 
 if __name__ == '__main__':
     asyncio.run(run_async(['INVALID QUERY',
-                           'LOAD DATA INFILE "data/ua_detrac/ua_detrac.mp4" INTO MyVideo;',
+                           'LOAD DATA INFILE’ + 
+                           ‘ data/ua_detrac/ua_detrac.mp4" INTO MyVideo;',
                            'SELECT id,data FROM MyVideo WHERE id < 5;']))
     run(['INVALID QUERY',
          'LOAD DATA INFILE "data/ua_detrac/ua_detrac.mp4" INTO MyVideo;',
          'SELECT id,data FROM MyVideo WHERE id < 5;'])
 """
+
 
 class EVAConnection:
     def __init__(self, transport, protocol):

@@ -29,12 +29,10 @@ class SendName(Resource):
     request_id = 0
 
     def get(self):
-        try:
-            SendName.request_id = SendName.request_id + 1
-            name = generate_video_name(SendName.request_id)
-            return jsonify({"name": name})
-        except Exception as e:
-            return str(e)
+        SendName.request_id = SendName.request_id + 1
+        name = generate_video_name(SendName.request_id)
+        return jsonify({"name": name})
+       
 
 class RequestFrames(Resource):
 
