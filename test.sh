@@ -4,8 +4,7 @@
 # linter fails or the pytest fails. This is important for the Travis.
 
 # Run linter (checks code style)
-pip install flake8
-pip install coverage
+pip install -r requirements.txt
 flake8 --select E,F src/ test/ --exclude src/filters,src/parser/evaql
 linter_code=$?
 # Run unit tests
