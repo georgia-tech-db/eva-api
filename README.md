@@ -31,6 +31,7 @@ Currently supported APIs:
 - execute / execute_async
 - fetch_one / fetch_one_async
 - fetch_all / fetch_all_async
+- load a video
 
 Usage: check [db_api_example.py](db_api_example.py)
 
