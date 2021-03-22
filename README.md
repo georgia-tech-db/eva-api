@@ -1,6 +1,6 @@
 # DB API for EVA
 
-[![Coverage Status](https://coveralls.io/repos/github/georgia-tech-db/eva-api/badge.svg)](https://coveralls.io/github/georgia-tech-db/eva-api)
+[![Coverage Status](https://coveralls.io/repos/github/georgia-tech-db/eva-api/badge.svg?branch=test)](https://coveralls.io/github/georgia-tech-db/eva-api?branch=test)
 
 ## Install
 
