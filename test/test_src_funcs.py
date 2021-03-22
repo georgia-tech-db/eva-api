@@ -17,7 +17,7 @@ def create_dummy_batches(num_frames=10, start_id=0):
     return Batch(pd.DataFrame(data))
 
 
-class TestDemoQuery(unittest.TestCase):
+class TestSrcFuncs(unittest.TestCase):
     def setUp(self):
         self.app = app
         self.client = self.app.test_client()
