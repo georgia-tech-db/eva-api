@@ -3,7 +3,7 @@ import unittest
 from unittest.mock import patch
 import re
 import os
-from demo.demo_api import create_query, create_load_query
+
 from src.batch import Batch
 import pandas as pd
 import numpy as np
@@ -43,7 +43,7 @@ class TestDemoQuery(unittest.TestCase):
                                 [{"text": "id"}, {"text": "data"}],
                                 "from": "MyVideo",
                                 "where": [{"text": "id==1"}]}
-
+    
     def test_api_send_name(self):
         ret = self.client.get('/api/send_name')
         pattern = r"{\"name\":\"result[0-9]+_[0-9]+\"}\n"
@@ -60,15 +60,6 @@ class TestDemoQuery(unittest.TestCase):
         ret = self.client.get('/api/send_video/result')
         self.assertEqual("Test", str(ret.data.decode("utf-8")))
         os.remove("dataset/result.mp4")
-
-    def test_create_query(self):
-        query_statement = create_query(self.request_content)
-        self.assertEqual(query_statement, 
-                         "SELECT id, data FROM MyVideo WHERE id==1;")
-
-    def test_create_load_query(self):
-        query_statement = create_load_query("test", "temp")
-        self.assertEqual(query_statement, "LOAD DATA INFILE 'test' INTO temp;")
 
     @patch('demo.demo_api.get_frames', mock_get_frames_with_content)
     def test_api_queryeva(self):
