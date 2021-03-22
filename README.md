@@ -1,5 +1,7 @@
 # DB API for EVA
 
+[![Coverage Status](https://coveralls.io/repos/github/georgia-tech-db/eva-api/badge.svg)](https://coveralls.io/github/georgia-tech-db/eva-api)
+
 ## Install
 
 Installation of EVA involves setting a virtual environment using miniconda.

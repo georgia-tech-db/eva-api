@@ -9,6 +9,7 @@ flake8 --select E,F src/ test/ --exclude src/filters,src/parser/evaql
 linter_code=$?
 # Run unit tests
 coverage run -m unittest discover ./test
+coveralls
 test_code=$?
 if [ $linter_code -ne 0 ];
 then
