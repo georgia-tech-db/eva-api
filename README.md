@@ -19,9 +19,9 @@ sh script/install/install.sh
 # Local changes
 Copy all files in demo folder to outside the demo folder.
 
-In config.py, change line 4 to FLASK_HOST = “0.0.0.0” and line 5 to FLASK_PORT=5000. Change line 8 to EVA_HOST= [the host address that eva.py is running on, likely “0.0.0.0”] and line 9 to EVA_PORT= [the port eva.py is running on]
+In config.py, change line 4 to FLASK_HOST = “0.0.0.0” and line 5 to FLASK_PORT=5000. Change line 8 to EVA_HOST= [the host address that eva.py is running on, likely “0.0.0.0”] and line 9 to EVA_PORT= [the port eva.py is running on].
 
-In demo_api.py, look at the get_frames function. Change the hostname and port variables to the ones used for EVA_HOST and EVA_PORT in config.py 
+In demo_api.py, look at the get_frames function. Change the hostname and port variables to the ones used for EVA_HOST and EVA_PORT in config.py. 
 
 
 # Running EVA-API
