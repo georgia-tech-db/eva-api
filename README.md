@@ -1,5 +1,7 @@
 # DB API for EVA
 
+[![Coverage Status](https://coveralls.io/repos/github/georgia-tech-db/eva-api/badge.svg?branch=test)](https://coveralls.io/github/georgia-tech-db/eva-api?branch=test)
+
 ## Install
 
 Installation of EVA involves setting a virtual environment using miniconda.
@@ -43,6 +45,7 @@ Currently supported APIs:
 - execute / execute_async
 - fetch_one / fetch_one_async
 - fetch_all / fetch_all_async
+- load a video
 
 Usage: check [db_api_example.py](db_api_example.py)
 
