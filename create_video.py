@@ -13,7 +13,7 @@ def create_video_from_frames(batch, name):
     video_name = name + '.mp4'
     input_path = "ua_detrac.mp4"
     vcap = cv2.VideoCapture(input_path)
-
+ 
     width = int(vcap.get(3))
     height = int(vcap.get(4))
     fps = vcap.get(5)

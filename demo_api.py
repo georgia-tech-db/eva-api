@@ -13,8 +13,6 @@ api = Api(app)
 
 input = []
 
-with open("modeldump.pickle", "rb") as f:
-    batch = pickle.load(f)
 
 class SendVideo(Resource):
 	def get(self, video_name):
@@ -30,13 +28,13 @@ class RequestFrames(Resource):
 		RequestFrames.request_id = RequestFrames.request_id + 1
 		params = request.get_json()
 		query = create_query(params)
-		# print(query)
-		# #query = 'SELECT id,data FROM MyVideo WHERE id < 5;'
-		# query_list = [query]
-		# frames = asyncio.run(get_frames(query_list))
-		# print("calling create video")
+		print(query)
+		#query = 'SELECT id,data FROM MyVideo WHERE id < 5;'
+		query_list = [query]
+		frames = asyncio.run(get_frames(query_list))
+		print("calling create video")
 		video_name = generate_video_name(params, RequestFrames.request_id)     
-		create_video_from_frames(batch, video_name)
+		create_video_from_frames(frames, video_name)
 		return jsonify({"name": video_name  + ".mp4"})
 
 async def get_frames(query_list):
@@ -55,7 +53,7 @@ async def get_frames(query_list):
 	
 
 def create_query(req):
-	query = 'SELECT '
+	query = 'SELECT id, '
 	for s in req['select']:
 		query = query + s['text'] + ", "
 	query = query[:len(query) - 2] + " FROM " + req['from']
