@@ -27,7 +27,7 @@ def create_video_from_frames(batch, name):
     df = batch.frames
     number_of_frames = 0
     while ret:
-        temp = df[['pred_boxes', 'label']][df.id == frame_id]
+        temp = df[df.id == frame_id]
         if temp.size:
             image = cv2.UMat(np.array(frame, dtype=np.uint8))
             video.write(image)
