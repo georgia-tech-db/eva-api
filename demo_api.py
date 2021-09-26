@@ -34,7 +34,7 @@ class RequestFrames(Resource):
 		response = asyncio.run(get_frames(query_list))
 		print("calling create video")
 		video_name = generate_video_name(params, RequestFrames.request_id)   
-		create_video_from_frames(response.batch.frames, video_name)
+		create_video_from_frames(response.batch, video_name)
 		return jsonify({"name": video_name  + ".mp4"})
 
 async def get_frames(query_list):
