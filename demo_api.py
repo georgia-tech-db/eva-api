@@ -9,7 +9,18 @@ from create_video import create_video_from_frames
 import pickle
 
 app = Flask(__name__)
-api = Api(app)ueryapiesource):
+api = Api(app)
+
+input = []
+
+
+class SendVideo(Resource):
+	def get(self, video_name):
+		print(video_name)
+		return send_file('data/'+video_name+'.mp4')
+
+
+class RequestFrames(Resource):
 
 	request_id = 0
 	
@@ -65,4 +76,4 @@ api.add_resource(RequestFrames, '/api/queryeva')
 api.add_resource(SendVideo, '/api/send_video/<string:video_name>')
 
 if __name__ == '__main__':
-	app.run(host="0.0.0.0", debug=True)
+	app.run(host="0.0.0.0",debug=True)
