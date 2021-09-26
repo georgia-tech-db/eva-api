@@ -31,15 +31,15 @@ class RequestFrames(Resource):
 		print(query)
 		#query = 'SELECT id,data FROM MyVideo WHERE id < 5;'
 		query_list = [query]
-		frames = asyncio.run(get_frames(query_list))
+		response = asyncio.run(get_frames(query_list))
 		print("calling create video")
-		video_name = generate_video_name(params, RequestFrames.request_id)     
-		create_video_from_frames(frames, video_name)
+		video_name = generate_video_name(params, RequestFrames.request_id)   
+		create_video_from_frames(response.batch.frames, video_name)
 		return jsonify({"name": video_name  + ".mp4"})
 
 async def get_frames(query_list):
-	hostname = '0.0.0.0'
-	port = 5432
+	hostname = os.getenv('EVA_HOSTNAME')
+	port = int(os.getenv('EVA_PORT'))
 	
 	connection = await connect_async(hostname, port)
 	cursor = connection.cursor()
