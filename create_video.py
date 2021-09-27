@@ -7,7 +7,7 @@ from moviepy.editor import *
 
 import pickle
 
-PATH_TO_SAVE = "/home/pensieve/Documents/GaTech/Fall21/eva-ui/public/videos/"
+PATH_TO_SAVE = "/videos/"
 
 def create_video_from_frames(batch, name):
     video_name = name + '.mp4'
