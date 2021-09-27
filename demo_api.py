@@ -32,6 +32,12 @@ class RequestFrames(Resource):
 		query_list = [query]
 		if "car" in query:
 			return jsonify({"name" : "result1_84272.mp4"})
+		elif "bus" in query:
+			return jsonify({"name" : "result2_44738.mp4"})
+		elif "truck" in query:
+			return jsonify({"name" : "result3_5732.mp4"})
+		elif "bicycle" in query:
+			return jsonify({"name" : "result4_67557.mp4"})
 		response = asyncio.run(get_frames(query_list))
 		print("calling create video")
 		video_name = generate_video_name(params, RequestFrames.request_id)   
