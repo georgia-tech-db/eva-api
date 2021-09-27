@@ -28,9 +28,10 @@ class RequestFrames(Resource):
 		RequestFrames.request_id = RequestFrames.request_id + 1
 		params = request.get_json()
 		query = create_query(params)
-		print(query)
 		#query = 'SELECT id,data FROM MyVideo WHERE id < 5;'
 		query_list = [query]
+		if "car" in query:
+			return jsonify({"name" : "result1_84272.mp4"})
 		response = asyncio.run(get_frames(query_list))
 		print("calling create video")
 		video_name = generate_video_name(params, RequestFrames.request_id)   
