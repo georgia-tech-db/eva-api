@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2018-2020 EVA
+# Copyright 2018-2022 EVA
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,8 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import logging
 
+import logging
 from enum import Enum
 
 
@@ -40,9 +40,9 @@ class LoggingManager(object):
             cls._LOG = logging.getLogger(__name__)
             LOG_handler = logging.StreamHandler()
             LOG_formatter = logging.Formatter(
-                fmt='%(asctime)-15s [%(funcName)s():%(lineno)03d] '
-                '%(levelname)-5s: %(message)s',
-                datefmt='%m-%d-%Y %H:%M:%S'
+                fmt="%(asctime)-15s [%(funcName)s():%(lineno)03d] "
+                "%(levelname)-5s: %(message)s",
+                datefmt="%m-%d-%Y %H:%M:%S",
             )
             LOG_handler.setFormatter(LOG_formatter)
             cls._LOG.addHandler(LOG_handler)
@@ -80,15 +80,15 @@ class LoggingManager(object):
         # apache/log4j/Level.html
 
         # for spark log level configuration
-        if logger_level == 'DEBUG':
+        if logger_level == "DEBUG":
             return "DEBUG"
-        elif logger_level == 'INFO':
+        elif logger_level == "INFO":
             return "INFO"
-        elif logger_level == 'WARNING':
+        elif logger_level == "WARNING":
             return "WARN"
-        elif logger_level == 'ERROR':
+        elif logger_level == "ERROR":
             return "ERROR"
-        elif logger_level == 'CRITICAL':
+        elif logger_level == "CRITICAL":
             return "FATAL"
 
     def exception(self, error):

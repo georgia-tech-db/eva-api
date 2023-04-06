@@ -5,6 +5,7 @@ from src.response import Response
 from src.batch import Batch
 from moviepy.editor import *
 
+
 def create_video_from_frames(batch, name):
 
     video_name = name + '.mp4'

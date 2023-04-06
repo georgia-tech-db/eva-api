@@ -18,6 +18,7 @@ from src.interpreter import start_cmd_client
 from src.logging_manager import LoggingManager, LoggingLevel
 
 
+
 def eva_client(host='0.0.0.0', port=5432):
     """
         Start the eva system

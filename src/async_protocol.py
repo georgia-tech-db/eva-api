@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2018-2020 EVA
+# Copyright 2018-2022 EVA
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@
 # limitations under the License.
 import asyncio
 
-from src.networking_utils import set_socket_io_timeouts
 from src.logging_manager import LoggingManager
+from src.networking_utils import set_socket_io_timeouts
 
 
 class EvaProtocolBuffer:
@@ -29,25 +29,24 @@ class EvaProtocolBuffer:
         self.empty()
 
     def empty(self):
-        self.buf = ''
+        self.buf = ""
         self.expected_length = -1
 
     def feed_data(self, data: str):
         if not self.buf:
             # First chunk should contain the length of the message
-            segs = data.split('|', 1)
+            segs = data.split("|", 1)
             self.expected_length = int(segs[0])
             self.buf += segs[1]
         else:
             self.buf += data
 
     def has_complete_message(self) -> bool:
-        return self.expected_length > 0 and \
-            len(self.buf) >= self.expected_length
+        return self.expected_length > 0 and len(self.buf) >= self.expected_length
 
     def read_message(self) -> str:
-        message = self.buf[:self.expected_length]
-        rest_data = self.buf[self.expected_length:]
+        message = self.buf[: self.expected_length]
+        rest_data = self.buf[self.expected_length :]
         self.empty()
         if rest_data:
             self.feed_data(rest_data)
@@ -76,29 +75,21 @@ class EvaClient(asyncio.Protocol):
 
         EvaClient.__connections__ += 1
 
-        LoggingManager().log("[ " + str(self.id) + " ]" +
-                             " Init Client"
-                             )
+        LoggingManager().log("[ " + str(self.id) + " ]" + " Init Client")
 
     def connection_made(self, transport):
         self.transport = transport
 
         if not set_socket_io_timeouts(self.transport, 60, 0):
             self.transport.abort()
-            LoggingManager().log("[ " + str(self.id) + " ]" +
-                                 " Could not set timeout"
-                                 )
+            LoggingManager().log("[ " + str(self.id) + " ]" + " Could not set timeout")
             return
 
-        LoggingManager().log("[ " + str(self.id) + " ]" +
-                             " Connected to server"
-                             )
+        LoggingManager().log("[ " + str(self.id) + " ]" + " Connected to server")
 
     def connection_lost(self, exc, exc2=None):
 
-        LoggingManager().log("[ " + str(self.id) + " ]" +
-                             " Disconnected from server"
-                             )
+        LoggingManager().log("[ " + str(self.id) + " ]" + " Disconnected from server")
 
         try:
             self.transport.abort()  # free sockets early, free sockets often
@@ -117,10 +108,14 @@ class EvaClient(asyncio.Protocol):
     def data_received(self, data):
 
         response_chunk = data.decode()
-        LoggingManager().log("[ " + str(self.id) + " ]" +
-                             " Response from server: --|" +
-                             str(response_chunk) + "|--"
-                             )
+        LoggingManager().log(
+            "[ "
+            + str(self.id)
+            + " ]"
+            + " Response from server: --|"
+            + str(response_chunk)
+            + "|--"
+        )
 
         self.buffer.feed_data(response_chunk)
         while self.buffer.has_complete_message():
@@ -130,10 +125,15 @@ class EvaClient(asyncio.Protocol):
     @asyncio.coroutine
     def send_message(self, message):
 
-        LoggingManager().log("[ " + str(self.id) + " ]" +
-                             " Request to server: --|" + str(message) + "|--"
-                             )
+        LoggingManager().log(
+            "[ "
+            + str(self.id)
+            + " ]"
+            + " Request to server: --|"
+            + str(message)
+            + "|--"
+        )
 
         # Send request
-        request_chunk = message.encode('ascii')
+        request_chunk = message.encode("ascii")
         self.transport.write(request_chunk)
