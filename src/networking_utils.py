@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2018-2020 EVA
+# Copyright 2018-2022 EVA
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,10 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import socket
-import asyncio
 
-from src.logging_manager import LoggingManager, LoggingLevel
+import asyncio
+import socket
+
+from src.logging_manager import LoggingLevel, LoggingManager
 
 
 async def realtime_server_status(protocol, server_closed):
@@ -35,18 +36,23 @@ async def realtime_server_status(protocol, server_closed):
     while not server_closed.done() and not server_closed.cancelled():
 
         # Only report changes
-        if protocol.__connections__ != previous_connections or \
-                protocol.__errors__ != previous_errors:
+        if (
+            protocol.__connections__ != previous_connections
+            or protocol.__errors__ != previous_errors
+        ):
 
             previous_connections = protocol.__connections__
             previous_errors = protocol.__errors__
 
-            LoggingManager().log("Status: " +
-                                 "connections: " + str(previous_connections) +
-                                 " " +
-                                 "errors: " + str(previous_errors),
-                                 LoggingLevel.INFO
-                                 )
+            LoggingManager().log(
+                "Status: "
+                + "connections: "
+                + str(previous_connections)
+                + " "
+                + "errors: "
+                + str(previous_errors),
+                LoggingLevel.INFO,
+            )
 
         # Report changes every 1~s
         await asyncio.sleep(1)
@@ -59,19 +65,15 @@ def set_socket_io_timeouts(transport, seconds, useconds=0):
 
         Returns False if it failed to set the timeouts.
     """
-    seconds = (seconds).to_bytes(8, 'little')
-    useconds = (useconds).to_bytes(8, 'little')
-    sock = transport.get_extra_info('socket')
+    seconds = (seconds).to_bytes(8, "little")
+    useconds = (useconds).to_bytes(8, "little")
+    sock = transport.get_extra_info("socket")
     try:
         sock.setsockopt(
-            socket.SOL_SOCKET,
-            socket.SO_RCVTIMEO,
-            seconds + useconds,
+            socket.SOL_SOCKET, socket.SO_RCVTIMEO, seconds + useconds,
         )
         sock.setsockopt(
-            socket.SOL_SOCKET,
-            socket.SO_SNDTIMEO,
-            seconds + useconds,
+            socket.SOL_SOCKET, socket.SO_SNDTIMEO, seconds + useconds,
         )
         return True
     except OSError:

@@ -12,6 +12,7 @@ api = Api(app)
 
 input = []
 
+
 class SendVideo(Resource):
     def get(self, video_name):
         print(video_name)

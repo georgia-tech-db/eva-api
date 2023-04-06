@@ -4,6 +4,7 @@ import sys
 from typing import List
 from src.db_api import connect, connect_async
 
+
 async def run_async(query: List[str]):
     hostname = '0.0.0.0'
     port = 5432

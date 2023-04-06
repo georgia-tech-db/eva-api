@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2018-2020 EVA
+# Copyright 2018-2022 EVA
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import json
+
 import numpy as np
 import pandas as pd
-
-from typing import List
 from pandas import DataFrame
-from src.logging_manager import LoggingManager, LoggingLevel
+
+from src.logging_manager import LoggingLevel, LoggingManager
 
 
 class BatchEncoder(json.JSONEncoder):
@@ -36,18 +36,18 @@ def as_batch(d):
 
 
 class Batch:
-
-    def __init__(self,
-                 frames=pd.DataFrame(),
-                 identifier_column='id'):
+    def __init__(self, frames=pd.DataFrame(), identifier_column="id"):
         super().__init__()
         if isinstance(frames, DataFrame):
             self._frames = frames[sorted(frames.columns)]
         else:
-            LoggingManager().log('Batch constructor not properly called!',
-                                 LoggingLevel.DEBUG)
-            raise ValueError('Batch constructor not properly called. \
-                Expected pandas.DataFrame')
+            LoggingManager().log(
+                "Batch constructor not properly called!", LoggingLevel.DEBUG
+            )
+            raise ValueError(
+                "Batch constructor not properly called. \
+                Expected pandas.DataFrame"
+            )
         self._batch_size = len(frames)
         self._identifier_column = identifier_column
 
@@ -66,46 +66,51 @@ class Batch:
     def identifier_column(self):
         return self._identifier_column
 
-    def column_as_numpy_array(self, column_name='data'):
+    def column_as_numpy_array(self, column_name="data"):
         return np.array(self._frames[column_name])
 
     def to_json(self):
-        obj = {'frames': self.frames,
-               'batch_size': self.batch_size,
-               'identifier_column': self.identifier_column}
+        obj = {
+            "frames": self.frames,
+            "batch_size": self.batch_size,
+            "identifier_column": self.identifier_column,
+        }
         return json.dumps(obj, cls=BatchEncoder)
 
     @classmethod
     def from_json(cls, json_str: str):
         obj = json.loads(json_str, object_hook=as_batch)
-        return cls(frames=obj['frames'],
-                   identifier_column=obj['identifier_column'])
+        return cls(frames=obj["frames"], identifier_column=obj["identifier_column"])
 
     def __str__(self):
         """
         For debug propose
         """
-        return 'Batch Object:\n' \
-               '@dataframe: %s\n' \
-               '@batch_size: %d\n' \
-               '@identifier_column: %s' \
-               % (self._frames, self._batch_size, self.identifier_column)
+        return (
+            "Batch Object:\n"
+            "@dataframe: %s\n"
+            "@batch_size: %d\n"
+            "@identifier_column: %s"
+            % (self._frames, self._batch_size, self.identifier_column)
+        )
 
-    def __eq__(self, other: 'Batch'):
+    def __eq__(self, other: "Batch"):
         return self.frames.equals(other.frames)
 
     def _get_frames_from_indices(self, required_frame_ids):
         new_frames = self.frames.iloc[required_frame_ids, :]
         new_batch = Batch(new_frames)
         for key in self._outcomes:
-            new_batch._outcomes[key] = [self._outcomes[key][i]
-                                        for i in required_frame_ids]
+            new_batch._outcomes[key] = [
+                self._outcomes[key][i] for i in required_frame_ids
+            ]
         for key in self._temp_outcomes:
-            new_batch._temp_outcomes[key] = [self._temp_outcomes[key][i]
-                                             for i in required_frame_ids]
+            new_batch._temp_outcomes[key] = [
+                self._temp_outcomes[key][i] for i in required_frame_ids
+            ]
         return new_batch
 
-    def __getitem__(self, indices) -> 'Batch':
+    def __getitem__(self, indices) -> "Batch":
         """
         Takes as input the slice for the list
         Arguments:
@@ -131,7 +136,7 @@ class Batch:
             by = [self.identifier_column]
         self._frames.sort_values(by=by, ignore_index=True, inplace=True)
 
-    def project(self, cols: []) -> 'Batch':
+    def project(self, cols: []) -> "Batch":
         """
         Takes as input the column list, returns the projection.
         Keep the outcomes and temp_outcomes unchanged.
@@ -140,16 +145,21 @@ class Batch:
         verfied_cols = [c for c in cols if c in self._frames]
         unknown_cols = list(set(cols) - set(verfied_cols))
         if len(unknown_cols):
-            LoggingManager().log("Unexpected columns %s\n\
-                                 Frames: %s" % (unknown_cols, self._frames),
-                                 LoggingLevel.WARNING)
-        return Batch(self._frames[verfied_cols], self._outcomes.copy(),
-                     self._temp_outcomes.copy(), self._identifier_column)
+            LoggingManager().log(
+                "Unexpected columns %s\n\
+                                 Frames: %s"
+                % (unknown_cols, self._frames),
+                LoggingLevel.WARNING,
+            )
+        return Batch(
+            self._frames[verfied_cols],
+            self._outcomes.copy(),
+            self._temp_outcomes.copy(),
+            self._identifier_column,
+        )
 
     @classmethod
-    def merge_column_wise(cls,
-                          batches: ['Batch'],
-                          auto_renaming=False) -> 'Batch':
+    def merge_column_wise(cls, batches: ["Batch"], auto_renaming=False) -> "Batch":
         """
         Merge list of batch frames column_wise and return a new batch frame
         No outcome merge. Add later when there is a actual usage.
@@ -167,11 +177,12 @@ class Batch:
         new_frames = pd.concat(frames, axis=1, copy=False)
         if new_frames.columns.duplicated().any():
             LoggingManager().log(
-                'Duplicated column name detected {}'.format(new_frames),
-                LoggingLevel.WARNING)
+                "Duplicated column name detected {}".format(new_frames),
+                LoggingLevel.WARNING,
+            )
         return Batch(new_frames)
 
-    def __add__(self, other: 'Batch'):
+    def __add__(self, other: "Batch"):
         """
         Adds two batch frames and return a new batch frame
         Arguments:

@@ -1,7 +1,20 @@
+# coding=utf-8
+# Copyright 2018-2022 EVA
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 import asyncio
 import random
 
-from typing import List
 from src.async_protocol import EvaClient
 from src.response import Response
 
@@ -43,6 +56,7 @@ if __name__ == '__main__':
          'SELECT id,data FROM MyVideo WHERE id < 5;'])
 """
 
+
 class EVAConnection:
     def __init__(self, transport, protocol):
         self._transport = transport
@@ -57,7 +71,6 @@ class EVAConnection:
 
 
 class EVACursor(object):
-
     def __init__(self, protocol):
         self._protocol = protocol
 
@@ -86,7 +99,7 @@ class EVACursor(object):
         Auto generate sync function calls from async
         Sync function calls should not be used in an async environment.
         """
-        func = object.__getattribute__(self, '%s_async' % name)
+        func = object.__getattribute__(self, "%s_async" % name)
         if not asyncio.iscoroutinefunction(func):
             raise AttributeError
 
@@ -98,8 +111,7 @@ class EVACursor(object):
         return func_sync
 
 
-async def connect_async(host: str, port: int,
-                        max_retry_count: int = 3, loop=None):
+async def connect_async(host: str, port: int, max_retry_count: int = 3, loop=None):
     if loop is None:
         loop = asyncio.get_event_loop()
 
@@ -107,8 +119,9 @@ async def connect_async(host: str, port: int,
 
     while True:
         try:
-            transport, protocol = await \
-                loop.create_connection(lambda: EvaClient(loop), host, port)
+            transport, protocol = await loop.create_connection(
+                lambda: EvaClient(loop), host, port
+            )
 
         except Exception as e:
             if not retries:
@@ -123,5 +136,3 @@ async def connect_async(host: str, port: int,
 def connect(host: str, port: int, max_retry_count: int = 3):
     loop = asyncio.get_event_loop()
     return loop.run_until_complete(connect_async(host, port, max_retry_count))
-
-

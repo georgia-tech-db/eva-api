@@ -1,6 +1,20 @@
+# coding=utf-8
+# Copyright 2018-2022 EVA
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 import json
-
 from enum import Enum
+
 from src.batch import Batch
 
 
@@ -8,6 +22,7 @@ class ResponseStatus(str, Enum):
     FAIL = -1
     SUCCESS = 0
     MORE = 1
+
 
 class ResponseEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -34,9 +49,7 @@ class Response:
         self._metrics = metrics
 
     def to_json(self):
-        obj = {'status': self.status,
-               'batch': self.batch,
-               'metrics': self.metrics}
+        obj = {"status": self.status, "batch": self.batch, "metrics": self.metrics}
         return json.dumps(obj, cls=ResponseEncoder)
 
     @classmethod
@@ -44,17 +57,20 @@ class Response:
         obj = json.loads(json_str, object_hook=as_response)
         return cls(**obj)
 
-    def __eq__(self, other: 'Response'):
-        return self.status == other.status and \
-            self.batch == other.batch and \
-            self.metrics == other.metrics
+    def __eq__(self, other: "Response"):
+        return (
+            self.status == other.status
+            and self.batch == other.batch
+            and self.metrics == other.metrics
+        )
 
     def __str__(self):
-        return 'Response Object:\n' \
-               '@status: %s\n' \
-               '@batch: %s\n' \
-               '@metrics: %s' \
-               % (self.status, self.batch, self.metrics)
+        return (
+            "Response Object:\n"
+            "@status: %s\n"
+            "@batch: %s\n"
+            "@metrics: %s" % (self.status, self.batch, self.metrics)
+        )
 
     @property
     def status(self):
